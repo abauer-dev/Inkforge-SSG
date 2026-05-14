@@ -1,0 +1,125 @@
+import unittest
+
+from md_elements import text_to_textnodes
+from textnode import TextNode, TextType
+
+
+class TestTextToTextNodes(unittest.TestCase):
+    def test_all_types(self):
+        text = "This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
+        self.assertEqual(
+            text_to_textnodes(text),
+            [
+                TextNode("This is ", TextType.TEXT),
+                TextNode("text", TextType.BOLD),
+                TextNode(" with an ", TextType.TEXT),
+                TextNode("italic", TextType.ITALIC),
+                TextNode(" word and a ", TextType.TEXT),
+                TextNode("code block", TextType.CODE),
+                TextNode(" and an ", TextType.TEXT),
+                TextNode(
+                    "obi wan image",
+                    TextType.IMAGE,
+                    "https://i.imgur.com/fJRm4Vk.jpeg",
+                ),
+                TextNode(" and a ", TextType.TEXT),
+                TextNode("link", TextType.LINK, "https://boot.dev"),
+            ],
+        )
+
+    def test_plain_text(self):
+        text = "Just some plain text with no formatting"
+        self.assertEqual(
+            text_to_textnodes(text),
+            [TextNode("Just some plain text with no formatting", TextType.TEXT)],
+        )
+
+    def test_empty_string(self):
+        # An empty input shouldn't crash; either an empty list or
+        # a single empty text node is reasonable depending on your impl.
+        # Adjust to match what your function actually returns.
+        self.assertEqual(text_to_textnodes(""), [TextNode("", TextType.TEXT)])
+
+    def test_bold_only(self):
+        self.assertEqual(
+            text_to_textnodes("**bold**"),
+            [TextNode("bold", TextType.BOLD)],
+        )
+
+    def test_italic_only(self):
+        self.assertEqual(
+            text_to_textnodes("_italic_"),
+            [TextNode("italic", TextType.ITALIC)],
+        )
+
+    def test_code_only(self):
+        self.assertEqual(
+            text_to_textnodes("`code`"),
+            [TextNode("code", TextType.CODE)],
+        )
+
+    def test_image_only(self):
+        self.assertEqual(
+            text_to_textnodes("![alt](https://example.com/img.png)"),
+            [TextNode("alt", TextType.IMAGE, "https://example.com/img.png")],
+        )
+
+    def test_link_only(self):
+        self.assertEqual(
+            text_to_textnodes("[click](https://boot.dev)"),
+            [TextNode("click", TextType.LINK, "https://boot.dev")],
+        )
+
+    def test_bold_and_italic(self):
+        self.assertEqual(
+            text_to_textnodes("**bold** and _italic_"),
+            [
+                TextNode("bold", TextType.BOLD),
+                TextNode(" and ", TextType.TEXT),
+                TextNode("italic", TextType.ITALIC),
+            ],
+        )
+
+    def test_image_and_link_together(self):
+        # Catches the image-vs-link confusion at the integration level
+        text = "![img](https://a.com/x.png) and [link](https://boot.dev)"
+        self.assertEqual(
+            text_to_textnodes(text),
+            [
+                TextNode("img", TextType.IMAGE, "https://a.com/x.png"),
+                TextNode(" and ", TextType.TEXT),
+                TextNode("link", TextType.LINK, "https://boot.dev"),
+            ],
+        )
+
+    def test_adjacent_formatting(self):
+        # Multiple delimited runs back-to-back with text between
+        text = "**bold1** _italic1_ **bold2** _italic2_"
+        self.assertEqual(
+            text_to_textnodes(text),
+            [
+                TextNode("bold1", TextType.BOLD),
+                TextNode(" ", TextType.TEXT),
+                TextNode("italic1", TextType.ITALIC),
+                TextNode(" ", TextType.TEXT),
+                TextNode("bold2", TextType.BOLD),
+                TextNode(" ", TextType.TEXT),
+                TextNode("italic2", TextType.ITALIC),
+            ],
+        )
+
+    def test_text_before_and_after(self):
+        # Plain text wrapping a single formatted span
+        text = "before **bold** after"
+        self.assertEqual(
+            text_to_textnodes(text),
+            [
+                TextNode("before ", TextType.TEXT),
+                TextNode("bold", TextType.BOLD),
+                TextNode(" after", TextType.TEXT),
+            ],
+        )
+
+
+if __name__ == "__main__":
+    unittest.main()
