@@ -44,31 +44,28 @@ class ParentNode(HTMLNode):
 
     def to_html(self):
         if self.tag is None:
-            raise ValueError("value is missing")
+            raise ValueError("ParentNode must have a tag")
         if self.children is None:
-            raise ValueError("children is missing")
+            raise ValueError("ParentNode must have children")
 
-        text=""
-        if self.children is None:
-            print("yes")
-            return self.to_html()
+        inner=""
         for child in self.children:
-            print(child)
-            text += child.to_html()
+            #print(child)
+            inner += child.to_html()
+        props = self.props_to_html() if self.props else ""
+        return f"<{self.tag}{props}>{inner}</{self.tag}>"
 
-        return f"<{self.tag}>{text}</{self.tag}>"
+def main():
+    node = ParentNode(
+    "p",
+    [
+        LeafNode("b", "Bold text"),
+        LeafNode(None, "Normal text"),
+        LeafNode("i", "italic text"),
+        LeafNode(None, "Normal text"),
+    ],
+    )
 
-# def main():
-#     node = ParentNode(
-#     "p",
-#     [
-#         LeafNode("b", "Bold text"),
-#         LeafNode(None, "Normal text"),
-#         LeafNode("i", "italic text"),
-#         LeafNode(None, "Normal text"),
-#     ],
-#     )
+    print(node.to_html())
 
-#     print(node.to_html())
-
-# main()
+main()
