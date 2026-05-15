@@ -64,7 +64,7 @@ def generate_pages_recursive(content_dir, template_path, dest_dir, basepath):
 
 
 def main():
-    basepath = sys.argv[0] or "/"
+    basepath = sys.argv[1] if len(sys.argv) > 1 else "/"
     copy_files_recursive("static", "docs")
     generate_pages_recursive("content", "template.html", "docs", basepath)
     #generate_page("content/index.md", "template.html", "public/index.html")
