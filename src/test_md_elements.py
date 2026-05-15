@@ -234,7 +234,6 @@ class TestSplitNodesImage(unittest.TestCase):
         node = TextNode("A [link](https://boot.dev) is not an image", TextType.TEXT)
         self.assertEqual(split_nodes_images([node]), [node])
 
-
 class TestSplitNodesLink(unittest.TestCase):
     def test_basic(self):
         node = TextNode(
