@@ -4,8 +4,7 @@ from split_blocks import (
     block_to_block_type,
     markdown_to_blocks,
 )
-from md_elements import text_to_textnodes
-from textnode import TextNode, TextType, text_node_to_html_node
+from textnode import TextNode, TextType, text_node_to_html_node, text_to_textnodes
 
 
 def text_to_children(text):
