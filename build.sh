@@ -1,1 +1,1 @@
-python3 src/main.py "Inkforge-SSG"
+python3 src/main.py "/Inkforge-SSG/"
