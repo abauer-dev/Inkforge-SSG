@@ -2,7 +2,7 @@
 
 A static site generator built from scratch in Python. Markdown in, HTML out — no frameworks, no dependencies, no magic.
 
-You can see my statics sites deployed on Github Pagese: https://abauer-dev.github.io/Inkforge-SSG/
+You can see my static sites deployed on Github Pagese: https://abauer-dev.github.io/Inkforge-SSG/
 
 ## What it does
 
