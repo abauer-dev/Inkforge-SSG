@@ -95,19 +95,3 @@ def markdown_to_html_node(markdown):
     blocks = markdown_to_blocks(markdown)
     children = [block_to_html_node(block) for block in blocks]
     return ParentNode("div", children)
-
-def main():
-    md = """
-This is **bolded** paragraph
-text in a p
-tag here
-
-## This is another paragraph with _italic_ text and `code` here
-
-"""
-
-    node = markdown_to_html_node(md)
-    html = node.to_html()
-    print(html)
-
-main()
